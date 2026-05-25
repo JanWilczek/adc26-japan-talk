@@ -61,6 +61,10 @@
         - the name
         - lack of type safety (?)
         - lost type of parameters (unless you do a dynamic_cast<>() or addToLayout<>() trick by Attila -> show both)
+            - problem with dynamic_cast<> and pointers
+                - pointers can be null
+                - dynamic_cast<> is verbose and error-prone (duplication)
+                - the code becomes overly verbose and imperative
         - no possibility to specify the output format
         - possibility of a deadlock -> don't ask me, ask JUCE experts
         - other issues (parameter groups)
@@ -72,11 +76,16 @@
         - I don't like the idea of having to remember to add each new parameter into serialization/deserialization code. There aren't any mechanism to fail compilation if we add a parameter but forget to serialize it. Maybe C++ 26 reflection could help here, but we are a long way from having it in all major compilers.
 1. Short summary: we want to have strongly typed parameters (for updating the DSP algorithm and serialization), but we also want to have a way of performing an operation on ALL plugin parameters, ideally preserving the parameter type. In other words, we want to treat the parameters as a collection of objects of different types.
 1. Criteria for a desired plugin parameter solution
-	1. Integration with the `juce::AudioProcessor::addParameter()` API
-	2. Type safety (no raw `float`s, no `dynamic_cast`s, type-safe access)
-	3. Treating parameters as a collection
-	4. Easy, minimal-code serialization
-	5. Preset support
-	6. Minimal code on the client side
-	7. Support for parameter groups and meta parameters
+    1. Integration with the `juce::AudioProcessor::addParameter()` API
+    2. Type safety (no raw `float`s, no `dynamic_cast`s, type-safe access)
+    3. Treating parameters as a collection
+    4. Easy, minimal-code serialization
+    5. Preset support
+    6. Minimal code on the client side
+    7. Support for parameter groups and meta parameters
 1. Developing a type-erased plugin parameter system
+    1. I won't explain now what type erasure is; instead let's focus on developing such a solution
+    1. I want to avoid virtual polymorphism and not store the parameters via a pointer to base, because that makes us lose the type information (we would need to use dynamic_cast to retreive it)
+    1. I don't want to subclass all juce::AudioParameter* classes just to customize their serialization, because that seems like a lot of work resulting in a very unstable solution. We also don't want to reimplement these classes; I, just as probably you, already use JUCE parameter classes and I wouldn't like to rewrite this whole system, just to add flexible serialization.
+    1. We want to have a collection. Let's represent this collection as a vector of `TypeErasedAudioParameter`s. `TypeErasedAudioParameter` is a class with value semantics that somehow wraps `juce::AudioParameter*` class.
+    1. `TypeErasedAudioParameter` structure (TODO)

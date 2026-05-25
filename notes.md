@@ -19,6 +19,15 @@
 - The general problem: We need access to singular parameters ideallly as strong types (for get/set and nice display (?), e.g., AudioParameterChoice)
 - AudioParameter* classes in JUCE
 - What's interesting, GenericAudioProcessorEditor, uses hacks to determine parameter type
+- Downsides of the type-erased solution
+    - a bit of additional code
+    - more difficult debugging
+    - may be too complicated for junior devs
+- What we gain
+    - easy operation on all parameters
+    - extensible set of operations
+    - extensible set of types (sic!) -> more difficult than adding new operations, but still doable
+    - type safety! No dynamic_casts<>, no pointers
 
 ## Submitted Outline
 
