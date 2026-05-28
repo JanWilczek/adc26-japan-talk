@@ -90,3 +90,32 @@
     1. We want to have a collection. Let's represent this collection as a vector of `TypeErasedAudioParameter`s. `TypeErasedAudioParameter` is a class with value semantics that somehow wraps `juce::AudioParameter*` class.
     1. `TypeErasedAudioParameter` structure (TODO)
 
+1. Operations - foo()
+1. Operations - getValue()
+    1. Not possible; we need the concrete type
+    1. Show TypeErasedAudioParameter creation including `addParameter()`
+1. Creating a TypeErasedParameter is difficult -> use a Builder class
+    1. The Builder class can help us with `addParameter()`, too
+    1. Use the && trick to ensure the builder instance is destroyed as it's single-use
+1. Create ParameterHolder to wrap the entire thing
+1. Summarize the structure so far: TypeErasedParameter, Concept, Model, Holder, Builder, Concrete references in processor.
+    1. What does it give us? We can use concrete references when we need to use particular parameters (for example for getValue(), or UI attachments) and use ParameterHolder for bulk operations on parameters (e.g., serialization, presets.)
+    1. So how can we now serialize these parameters?
+1. Show how serialization works
+    1. Previously, we either
+        1. lost type information with APVTS
+        1. had to serialize each parameter separately
+    1. Now, we can perform the serialization operation on all parameters automatically in a type-safe way! How?
+1. Show serializeToJson() method -> bad because we would need to add a new method to the entire hierarchy on each new operation
+1. Well-known problem of software design: we either can easily add operations or types but not both. We accomodate for all parameter types but we can only add new operations by intrusive changes to ParameterHolder. But is that truly the case?
+1. Well, there is another design pattern that may come in handy: the Visitor pattern. By using the Visitor, we again favor the addition of operations while making adding new types difficult. But that's fine: I expect that most devs are fine with JUCE-supplied parameter classes, and may add at most 2-3 of their own classes. The Visitor pattern allows sharing code that can be performed on all types, while allowing for type-specific code to be executed, all in a type-safe manner.
+1. `accept()` function
+1. `Visitor` base class (it must be a base class, because we cannot use template arguments in virtual functions).
+1. The complete solution
+    1. Final ParameterHolder
+    1. JuceParameterHolder alias
+    1. Put in PluginProcessor
+    1. Initialize parameters upon construction
+    1. Update parameter values in processBlock()
+    1. Use from UI with ParameterAttachments
+    1. De/Serialize using the Updating/VarArray visitor
