@@ -89,3 +89,4 @@
     1. I don't want to subclass all juce::AudioParameter* classes just to customize their serialization, because that seems like a lot of work resulting in a very unstable solution. We also don't want to reimplement these classes; I, just as probably you, already use JUCE parameter classes and I wouldn't like to rewrite this whole system, just to add flexible serialization.
     1. We want to have a collection. Let's represent this collection as a vector of `TypeErasedAudioParameter`s. `TypeErasedAudioParameter` is a class with value semantics that somehow wraps `juce::AudioParameter*` class.
     1. `TypeErasedAudioParameter` structure (TODO)
+

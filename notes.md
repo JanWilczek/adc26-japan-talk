@@ -91,3 +91,51 @@ std::unique_ptr<ParameterComponent> createParameterComp (AudioProcessor& process
     return std::make_unique<SliderParameterComponent> (processor, parameter);
 }
 ```
+
+## Talk description
+
+Title: Type-Erased Audio Parameters: A New Approach to an Old Problem
+
+Most audio plugins need parameters. For example, a low-pass filter plugin can provide a cutoff frequency, a slope steepness, and a resonance parameter.
+
+All audio plugin formats provide some mechanism for defining and interacting with plugin parameters. The JUCE C++ framework, the most popular cross-platform framework for developing audio plugins, provides an abstraction layer over those parameter mechanisms.
+
+Yet defining, using, and maintaining parameters is a non-trivial task. There are various features a plugin developer may need, like
+
+type safety,
+range and value validation,
+value formatting and labeling,
+observing (for UI controls or audio processing updates),
+smoothing,
+serialization (e.g., for presets),
+parameter groups, or
+meta parameters.
+
+Over the years, a few parameter management systems for JUCE-based plugins have been proposed, but none have been without serious flaws. The most famous of them, AudioProcessorValueTreeState, has been widely criticized.
+
+This talk will provide a tour of current plugin parameter challenges and existing solutions, and then propose a new solution based on the type erasure technique: an advanced C++ design pattern meant to replace polymorphism in a non-intrusive manner.
+
+Type-erased audio parameters
+guarantee type safety (no low-level representation, no dynamic_casts)
+provide the necessary abstractions to use heterogeneous parameter instances as a collection
+don't use virtual polymorphism (no base classes or interfaces)
+enable easy feature addition without forking JUCE or writing a new parameter class system from scratch (you don't pay for what you don't use)
+is relatively easy to integrate into existing codebases.
+
+The talk is aimed at intermediate or advanced C++ developers who are familiar with at least one parameter API, such as the one in JUCE.
+
+## Coming up with type erasure
+
+### Approach 1: Bottom-up
+
+
+```cpp
+template <class Parameter>
+class ParameterWrapper {
+public:
+    ParameterWrapper(Parameter& p) : _p{p) {}
+
+private:
+    Parameter& _p;
+};
+```

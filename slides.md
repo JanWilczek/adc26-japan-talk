@@ -41,3 +41,192 @@ Slidev is a slides maker and presenter designed for developers, consist of the f
 
 Read more about [Why Slidev?](https://sli.dev/guide/why)
 
+---
+
+# Type-Erased Parameters (bottom-up)
+
+---
+
+## ParameterWrapper
+
+```cpp
+template <class Parameter>
+class ParameterWrapper {
+public:
+    ParameterWrapper(Parameter& p) : _p{p} {}
+
+private:
+    Parameter& _p;
+};
+```
+
+---
+
+## ParameterWrapper
+
+```cpp
+template <class Parameter>
+class ParameterWrapper {
+public:
+    ParameterWrapper(Parameter& p) : _p{p} {}
+
+
+
+private:
+    Parameter& _p;
+};
+```
+
+---
+
+# Type-Erased Parameters (top-down)
+
+---
+
+# Collection of parameters
+
+```cpp
+class TypeErasedParameter;
+
+std::vector<TypeErasedParameter> parameters;
+```
+
+---
+
+# `TypeErasedParameter`
+
+```cpp
+class TypeErasedParameter {
+public:
+    TypeErasedParameter(juce::AudioParameterFloat& p) : _p{p} {}
+
+private:
+    juce::AudioParameterFloat& _p;
+};
+```
+
+---
+
+# `TypeErasedParameter`
+
+```cpp
+class TypeErasedParameter {
+public:
+    template <class Parameter>
+    TypeErasedParameter(Parameter& p) : _p{p} {}
+
+private:
+    Parameter& _p;
+};
+```
+
+---
+
+# `TypeErasedParameter`
+
+```cpp
+template <class Parameter>
+class TypeErasedParameter {
+public:
+    TypeErasedParameter(Parameter& p) : _p{p} {}
+
+private:
+    Parameter& _p;
+};
+```
+
+---
+
+# `TypeErasedParameter`
+
+```cpp
+template <class Parameter>
+class TypeErasedParameter {
+public:
+    TypeErasedParameter(Parameter& p) : _p{p} {}
+
+private:
+    Parameter& _p;
+};
+
+std::vector<TypeErasedParameter<?>> parameters;
+```
+
+---
+
+# `TypeErasedParameter`
+
+```cpp
+class TypeErasedParameter {
+public:
+    template <class Parameter>
+    TypeErasedParameter(Parameter& p) : _impl{std::make_unique<ParameterModel<Parameter>>(p)} {}
+
+private:
+    template <class Parameter>
+    class ParameterModel {
+    public:
+        ParameterModel(Parameter& p) : _p{p} {}
+    private:
+        Parameter& _p;
+    };
+
+    std::unique_ptr<ParameterModel<?>> _impl; // <- problem
+};
+```
+
+---
+
+# `TypeErasedParameter`
+
+```cpp {all|17}
+class TypeErasedParameter {
+public:
+    template <class Parameter>
+    TypeErasedParameter(Parameter& p) : _impl{std::make_unique<ParameterModel<Parameter>>(p)} {}
+
+private:
+    class ParameterConcept {
+    public:
+        virtual ~ParameterConcept() = default;
+    };
+
+    template <class Parameter>
+    class ParameterModel : public ParameterConcept {
+    public:
+        ParameterModel(Parameter& p) : _p{p} {}
+    private:
+        Parameter& _p;
+    };
+
+    std::unique_ptr<ParameterConcept> _impl;
+};
+```
+
+---
+
+# `TypeErasedParameter`
+
+```cpp {17}
+class TypeErasedParameter {
+public:
+    template <class Parameter>
+    TypeErasedParameter(Parameter& p) : _impl{std::make_unique<ParameterModel<Parameter>>(p)} {}
+
+private:
+    class ParameterConcept {
+    public:
+        virtual ~ParameterConcept() = default;
+    };
+
+    template <class Parameter>
+    class ParameterModel : public ParameterConcept {
+    public:
+        ParameterModel(Parameter& p) : _p{p} {}
+    private:
+        std::reference_wrapper<Parameter> _p; // copyable
+    };
+
+    std::unique_ptr<ParameterConcept> _impl;
+};
+```
