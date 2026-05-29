@@ -254,28 +254,18 @@ void savePreset(const std::string& presetName) {
 # Reuse `get/setStateInformation()`
 
 ```cpp
-std::expected<PresetLoadingSuccess, PresetLoadingError> loadPreset(const std::string& presetName) {
+void loadPreset(const std::string& presetName) {
   const auto presetFile = juce::File{presetPathFromName(name)};
-
-  if (!presetFile.existsAsFile()) {
-    return std::unexpected{PresetLoadingError::DoesNotExist};
-  }
-
-  if (!presetFile.hasReadAccess()) {
-    return std::unexpected{PresetLoadingError::NoPermission};
-  }
 
   juce::MemoryBlock presetData;
   const auto result = presetFile.loadFileAsData(presetData);
 
   if (!result) {
-    return std::unexpected{PresetLoadingError::FailedToReadFile};
+    return;
   }
 
   pluginProcessor.setStateInformation(presetData.getData(),
                                       static_cast<int>(presetData.getSize()));
-
-  return PresetLoadingSuccess::Ok;
 }
 ```
 
