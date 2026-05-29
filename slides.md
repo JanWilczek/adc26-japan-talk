@@ -233,6 +233,58 @@ GeneralSettingsComponent::GeneralSettingsComponent(
 
 ---
 
+# How to add presets? 🤔
+
+---
+
+# Reuse `get/setStateInformation()`
+
+```cpp
+void savePreset(const std::string& presetName) {
+    juce::MemoryBlock presetData;
+    pluginProcessor.getStateInformation(result);
+    const auto presetFile = juce::File{presetPathFromName(name)};
+    presetFile.deleteFile();
+    presetFile.appendData(presetData.getData(), presetData.getSize());
+}
+```
+
+---
+
+# Reuse `get/setStateInformation()`
+
+```cpp
+std::expected<PresetLoadingSuccess, PresetLoadingError> loadPreset(const std::string& presetName) {
+  const auto presetFile = juce::File{presetPathFromName(name)};
+
+  if (!presetFile.existsAsFile()) {
+    return std::unexpected{PresetLoadingError::DoesNotExist};
+  }
+
+  if (!presetFile.hasReadAccess()) {
+    return std::unexpected{PresetLoadingError::NoPermission};
+  }
+
+  juce::MemoryBlock presetData;
+  const auto result = presetFile.loadFileAsData(presetData);
+
+  if (!result) {
+    return std::unexpected{PresetLoadingError::FailedToReadFile};
+  }
+
+  pluginProcessor.setStateInformation(presetData.getData(),
+                                      static_cast<int>(presetData.getSize()));
+
+  return PresetLoadingSuccess::Ok;
+}
+```
+
+---
+
+
+
+---
+
 # Type-Erased Parameters (bottom-up)
 
 ---
