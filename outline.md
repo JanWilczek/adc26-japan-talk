@@ -20,6 +20,10 @@
         - show GUI
         - name some of the parameters the controls represent
     - Using APVTS according to JUCE tutorials to handle parameters and persistence
+        - ...
+        - serialization
+        - deserialization
+        - GUI
     - Wanting to add presets
         - problem with weak types (?)
         - lack of control of output (XML-only while I wanted a JSON)

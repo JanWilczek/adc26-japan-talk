@@ -45,7 +45,191 @@ ADC Japan 2026
 
 ---
 
-# Who here develops or uses audio plugins for digital audio workstations, either professionally or as a hobby?
+# Who here develops or uses audio plugins for digital audio workstations?
+
+<!-- either professionally or as a hobby? -->
+
+---
+
+# Who here uses JUCE to develop plugins?
+
+<!-- Well, let me tell you the story of developing my plugin -->
+
+---
+
+# The Story of a Synth
+
+---
+
+# Plugin processor
+
+```cpp {all|40}
+class EdenSynthAudioProcessor : public AudioProcessor {
+public:
+  EdenSynthAudioProcessor();
+  ~EdenSynthAudioProcessor();
+
+  void prepareToPlay(double sampleRate, int samplesPerBlock) override;
+  void releaseResources() override;
+
+#ifndef JucePlugin_PreferredChannelConfigurations
+  bool isBusesLayoutSupported(const BusesLayout& layouts) const override;
+#endif
+
+  void processBlock(AudioBuffer<float>&, MidiBuffer&) override;
+
+  AudioProcessorEditor* createEditor() override;
+  bool hasEditor() const override;
+
+  const String getName() const override;
+
+  bool acceptsMidi() const override;
+  bool producesMidi() const override;
+  bool isMidiEffect() const override;
+  double getTailLengthSeconds() const override;
+
+  int getNumPrograms() override;
+  int getCurrentProgram() override;
+  void setCurrentProgram(int index) override;
+  const String getProgramName(int index) override;
+  void changeProgramName(int index, const String& newName) override;
+
+  void getStateInformation(MemoryBlock& destData) override;
+  void setStateInformation(const void* data, int sizeInBytes) override;
+
+private:
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EdenSynthAudioProcessor)
+
+  std::filesystem::path _assetsPath;
+  eden::EdenSynthesiser _edenSynthesiser;
+  eden_vst::EdenAdapter _edenAdapter;
+  AudioProcessorValueTreeState _pluginParameters;
+};
+```
+
+---
+
+# Parameters via `AudioProcessorValueTreeState`
+
+```cpp {all|3|4-16|18}
+EdenSynthAudioProcessor::EdenSynthAudioProcessor()
+    : //...
+      _pluginParameters(*this, nullptr) {
+  using Parameter = juce::AudioProcessorValueTreeState::Parameter;
+
+  _pluginParameters.createAndAddParameter(std::make_unique<Parameter>(
+      "pitchBend.semitonesDown", "Pitch bend semitones down",
+      NormalisableRange<float>(-24.f, 0.f, 1.f), -12.f));
+  _pluginParameters.createAndAddParameter(std::make_unique<Parameter>(
+      "pitchBend.semitonesUp", "Pitch bend semitones up",
+      NormalisableRange<float>(0.f, 24.f, 1.f), 2.f));
+  _pluginParameters.createAndAddParameter(std::make_unique<Parameter>(
+      "frequencyOfA4", "Frequency of A4",
+      NormalisableRange<float>(400.f, 500.f, 0.1f), 440.f,
+      AudioProcessorValueTreeStateParameterAttributes{}.withLabel("Hz")));
+  // more parameters...
+
+  _pluginParameters.state = ValueTree(Identifier("EdenSynthParameters"));
+}
+```
+
+ <!-- `createAndAddParameter()` API is deprecated (?) -->
+
+---
+
+# Parameters via `AudioProcessorValueTreeState`
+
+```cpp
+void EdenSynthAudioProcessor::processBlock(AudioBuffer<float>& buffer,
+                                           MidiBuffer& midiMessages) {
+  //...
+
+  _synthesiser.setPitchBendRange(
+      {static_cast<int>(
+           *pluginParameters.getRawParameterValue("pitchBend.semitonesDown")),
+       static_cast<int>(
+           *pluginParameters.getRawParameterValue("pitchBend.semitonesUp"))});
+  _synthesiser.setFrequencyOfA4(
+      *pluginParameters.getRawParameterValue("frequencyOfA4"));
+
+  // audio & MIDI processing
+}
+```
+
+---
+
+# Parameters via `AudioProcessorValueTreeState`
+
+```cpp
+void EdenSynthAudioProcessor::getStateInformation(MemoryBlock& destData) {
+  auto state = _pluginParameters.copyState();
+  const std::unique_ptr<XmlElement> xml(state.createXml());
+  copyXmlToBinary(*xml, destData);
+}
+```
+
+---
+
+# Parameters via `AudioProcessorValueTreeState`
+
+```cpp
+void EdenSynthAudioProcessor::setStateInformation(const void* data,
+                                                  int sizeInBytes) {
+  std::unique_ptr<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+  if (xmlState.get()) {
+    if (xmlState->hasTagName(_pluginParameters.state.getType())) {
+      _pluginParameters.replaceState(ValueTree::fromXml(*xmlState));
+    }
+  }
+}
+```
+
+---
+
+```cpp {all|3|11-12|5}
+class GeneralSettingsComponent : public Component {
+public:
+  using SliderAttachment = AudioProcessorValueTreeState::SliderAttachment;
+
+  GeneralSettingsComponent(AudioProcessorValueTreeState&);
+
+  void resized() override;
+  void paint(Graphics& g) override;
+
+private:
+  Slider _pitchBendSemitonesUp;
+  std::unique_ptr<SliderAttachment> _pitchBendSemitonesUpAttachment;
+
+  Slider _pitchBendSemitonesDown;
+  std::unique_ptr<SliderAttachment> _pitchBendSemitonesDownAttachment;
+
+  Slider _a4Frequency;
+  std::unique_ptr<SliderAttachment> _a4FrequencyAttachment;
+};
+```
+
+---
+
+```cpp {all|7-8}
+GeneralSettingsComponent::GeneralSettingsComponent(
+    AudioProcessorValueTreeState& valueTreeState)
+    : _pitchBendSemitonesUp{/* */},
+      _pitchBendSemitonesDown{/* */},
+      _a4Frequency{/* */} {
+  addAndMakeVisible(_pitchBendSemitonesUp);
+  _pitchBendSemitonesUpAttachment = std::make_unique<SliderAttachment>(
+      valueTreeState, "pitchBend.semitonesUp", _pitchBendSemitonesUp);
+
+  addAndMakeVisible(_pitchBendSemitonesDown);
+  _pitchBendSemitonesDownAttachment = std::make_unique<SliderAttachment>(
+      valueTreeState, "pitchBend.semitonesDown", _pitchBendSemitonesDown);
+
+  addAndMakeVisible(_a4Frequency);
+  _a4FrequencyAttachment = std::make_unique<SliderAttachment>(
+      valueTreeState, "frequencyOfA4", _a4Frequency);
+}
+```
 
 ---
 
