@@ -326,6 +326,9 @@ void loadPreset(const std::string& presetName) {
 </EdenSynthParameters>
 ```
 
+<!-- not very readable, since all values are float -->
+<!-- APVTS stores parameters internally as references to RangedAudioParameter (base class) -->
+
 ---
 
 # APVTS-based presets
@@ -342,8 +345,6 @@ void loadPreset(const std::string& presetName) {
 - Values as `float`s (no meaningful values or types)
 - What if I want a different serialization format, like JSON?
 - Other APVTS drawbacks, e.g., requires a message thread
-
-<!-- TODO: check second con -->
 
 ---
 
