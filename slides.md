@@ -863,6 +863,107 @@ private:
 
 # Operations
 
+```cpp {1-3,7,12,18}
+void serializeToJson(juce::AudioParameterFloat& p);
+void serializeToJson(juce::AudioParameterBool& p);
+//...
+class TypeErasedParameter {
+public:
+    //...
+    void serializeToJson() { _impl->serializeToJson(); }
+private:
+    class ParameterConcept {
+    public:
+        virtual ~ParameterConcept() = default;
+        virtual void serializeToJson() = 0;
+    };
+    template <class Parameter>
+    class ParameterModel : public ParameterConcept {
+    public:
+        //...
+        void serializeToJson() override { serializeToJson(_p); }
+
+    private:
+        std::reference_wrapper<Parameter> _p;
+    };
+    std::unique_ptr<ParameterConcept> _impl;
+};
+```
+
+---
+
+# Serialization
+
+```cpp {1-3,7,12,18}
+struct Serializer {
+    virtual ~Serializer = default;
+    virtual void serializeToJson(juce::AudioParameterFloat& p) = 0;
+    virtual void serializeToJson(juce::AudioParameterBool& p) = 0;
+};
+//...
+class TypeErasedParameter {
+public:
+    //...
+    void serialize(Serializer& s) { _impl->serialize(s); }
+private:
+    class ParameterConcept {
+    public:
+        virtual ~ParameterConcept() = default;
+        virtual void serialize(Serializer&) = 0;
+    };
+    template <class Parameter>
+    class ParameterModel : public ParameterConcept {
+    public:
+        //...
+        void serialize(Serializer& s) override { serializer.serialize(_p); }
+
+    private:
+        std::reference_wrapper<Parameter> _p;
+    };
+    std::unique_ptr<ParameterConcept> _impl;
+};
+```
+
+<!-- Each new operation requires adding 3 functions. Cannot we streamline it? -->
+
+---
+
+# Serialization
+
+```cpp {1-3,7,12,18}
+struct Serializer {
+    virtual ~Serializer = default;
+    virtual void serializeToJson(juce::AudioParameterFloat& p) = 0;
+    virtual void serializeToJson(juce::AudioParameterBool& p) = 0;
+};
+//...
+class TypeErasedParameter {
+public:
+    //...
+    void serialize(Serializer& s) { _impl->serialize(s); }
+private:
+    class ParameterConcept {
+    public:
+        virtual ~ParameterConcept() = default;
+        virtual void serialize(Serializer&) = 0;
+    };
+    template <class Parameter>
+    class ParameterModel : public ParameterConcept {
+    public:
+        //...
+        void serialize(Serializer& s) override { serializer.serialize(_p); }
+
+    private:
+        std::reference_wrapper<Parameter> _p;
+    };
+    std::unique_ptr<ParameterConcept> _impl;
+};
+```
+
+---
+
+# Operations
+
 ```cpp {6,12,20}
 class TypeErasedParameter {
 public:
