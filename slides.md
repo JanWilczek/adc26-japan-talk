@@ -1109,6 +1109,7 @@ private:
 };
 ```
 
+<!-- So you can still access individual parameters, but now you can also perform operations on all of them easily (maintaining type safety) -->
 <!-- Once we have all this in place, adding serialization is a breeze. -->
 
 ---
@@ -1154,18 +1155,20 @@ private:
                          std::forward<V>(value));
   }
 
-  ParameterIdAndValueContainer _result;
+  std::vector<ParameterIdAndValue> _result;
 
   JUCE_DECLARE_NON_MOVEABLE(ParameterValuesExtractor)
 };
 
-inline ParameterIdAndValueContainer parameterIdsAndValues(
+inline std::vector<ParameterIdAndValue> parameterIdsAndValues(
     wolfsound::JuceParameterHolder& ph) {
   ParameterValuesExtractor visitor;
   ph.accept(visitor);
   return visitor.result();
 }
 ```
+
+<!-- Then we can define SerialisationTraits for ParameterIdAndValue -->
 
 ---
 
@@ -1175,7 +1178,27 @@ inline ParameterIdAndValueContainer parameterIdsAndValues(
 
 ---
 
+# What if we want to support custom parameter classes?
 
+```cpp
+template <class Visitor>
+class ParameterHolder {
+//...
+public:
+  void accept(Visitor& v) {/* ... */}
+//...
+};
+
+struct JuceParameterVisitor {
+  virtual ~JuceParameterVisitor() = default;
+  virtual void visit(juce::AudioParameterBool&) = 0;
+  virtual void visit(juce::AudioParameterFloat&) = 0;
+  virtual void visit(juce::AudioParameterInt&) = 0;
+  virtual void visit(juce::AudioParameterChoice&) = 0;
+};
+
+using JuceParameterHolder = ParameterHolder<JuceParameterVisitor>;
+```
 
 ---
 
@@ -1273,5 +1296,5 @@ private:
 
 ---
 
-# Operations
+# wolfsound-dsp-utils & EdenSynth
 
