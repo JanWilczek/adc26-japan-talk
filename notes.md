@@ -30,6 +30,8 @@
     - type safety! No dynamic_casts<>, no pointers
 - I am not sure if I should show std::reference_wrapper at all. It may cloud things, since TypeErasedAudioParameter is not copyable.
 
+- 
+
 ## Submitted Outline
 
 1. Introduction

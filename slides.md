@@ -357,18 +357,21 @@ void loadPreset(const std::string& presetName) {
 
 ---
 
-# APVTS-based presets
+# APVTS-based parameters
 
 ## Pros
 
 - Easy to implement
 - Automatic serialization of all parameters for free
+- Can work (somewhat) for presets
 
 ## Cons
 
-- Can get mangled with UI state
-- Little control over XML structure
+- Parameters mangled with UI state
+- Little control over XML structure in serialization
 - Values as `float`s (no meaningful values or types)
+    - `processBlock()`
+    - presets
 - What if I want a different serialization format, like JSON?
 - Other APVTS drawbacks, e.g., requires a message thread
 
