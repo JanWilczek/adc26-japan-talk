@@ -364,6 +364,7 @@ void loadPreset(const std::string& presetName) {
 - Easy to implement
 - Automatic serialization of all parameters for free
 - Can work (somewhat) for presets
+- Easy UI attachments
 
 ## Cons
 
@@ -494,6 +495,110 @@ PluginEditor::PluginEditor(PluginProcessor& p)
       rateAttachment{p.parameters.rate, rateSlider},
       bypassAttachment{p.parameters.bypassed, bypassButton} {}
 ```
+
+---
+
+# Serialization
+
+```cpp
+void PluginProcessor::getStateInformation(juce::MemoryBlock& destData) {
+  juce::MemoryOutputStream outputStream{destData, true};
+  JsonSerializer::serialize(parameters, outputStream);
+}
+
+void PluginProcessor::setStateInformation(const void* data, int sizeInBytes) {
+  juce::MemoryInputStream inputStream{data, static_cast<size_t>(sizeInBytes),
+                                      false};
+  const auto result = JsonSerializer::deserialize(inputStream, parameters);
+  if (result.failed()) {
+    // notify the user
+  }
+  // optionally skip smoothing
+}
+```
+
+---
+
+# Serialization
+
+```cpp
+struct SerializableParameters {
+  float rate;
+  bool bypassed;
+  juce::String waveform;
+
+  static constexpr auto marshallingVersion = 1;
+
+  template <typename Archive, typename T>
+  static void serialise(Archive& archive, T& p) {
+    using namespace juce;
+
+    if (archive.getVersion() != 1) {
+      return;
+    }
+
+    std::string pluginName = TREMOLO_PLUGIN_NAME;
+
+    archive(named("pluginName", pluginName));
+
+    if (pluginName != TREMOLO_PLUGIN_NAME) {
+      return;
+    }
+
+    archive(named("modulationRateHz", p.rate), named("bypassed", p.bypassed),
+            named("modulationWaveform", p.waveform));
+  }
+};
+```
+
+---
+
+
+```cpp
+SerializableParameters from(const :Parameters& p) {
+  return {
+      .rate = p.rate.get(),
+      .bypassed = p.bypassed.get(),
+      .waveform = p.waveform.getCurrentChoiceName(),
+  };
+}
+}  // namespace
+
+void JsonSerializer::serialize(const Parameters& parameters,
+                               juce::OutputStream& output) {
+  const auto json = juce::ToVar::convert(from(parameters));
+
+  if (!json.has_value()) {
+    return;
+  }
+
+  juce::JSON::writeToStream(output, *json,
+                            juce::JSON::FormatOptions{}
+                                .withSpacing(juce::JSON::Spacing::multiLine)
+                                .withMaxDecimalPlaces(2));
+}
+```
+
+<!-- And deserialization code is very similar  -->
+
+---
+
+# Concrete-type based parameters
+
+## Pros
+
+- Full type safety
+- Easy access to singular parameters
+    - `processBlock()`
+- We can use any serialization format we like
+- Serialization code can be reused for presets
+- Easy UI attachments
+- Possibility to add UI state serialization
+
+## Cons
+
+- "Manual" serialization code
+    - Adding new parameters requires updating `JsonSerializer` -> error-prone
 
 ---
 
