@@ -1202,7 +1202,18 @@ using JuceParameterHolder = ParameterHolder<JuceParameterVisitor>;
 
 ---
 
-# wolfsound-dsp-utils & EdenSynth
+# Implementations
+
+## `ParameterHolder` & example serialization
+
+- https://github.com/JanWilczek/wolfsound-dsp-utils
+    - *src/include/wolfsound/juce/wolfsound_ParameterHolder.hpp*
+
+## `ParameterHolder` serialization & presets (WIP)
+
+- https://github.com/JanWilczek/EdenSynth/tree/add-xml-presets-macos-var-params
+    - *EdenSynth/SharedCode/include/presets/Preset.h*
+    - *EdenSynth/SharedCode_test/source/presets_test/PresetsTest.cpp*
 
 ---
 
