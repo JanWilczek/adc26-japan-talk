@@ -899,8 +899,9 @@ struct Serializer {
     virtual ~Serializer = default;
     virtual void serializeToJson(juce::AudioParameterFloat& p) = 0;
     virtual void serializeToJson(juce::AudioParameterBool& p) = 0;
+    //...
 };
-//...
+
 class TypeErasedParameter {
 public:
     //...
@@ -928,30 +929,31 @@ private:
 
 ---
 
-# Serialization
+# Operations supporting all JUCE parameter classes
 
 ```cpp {1-3,7,12,18}
-struct Serializer {
-    virtual ~Serializer = default;
-    virtual void serializeToJson(juce::AudioParameterFloat& p) = 0;
-    virtual void serializeToJson(juce::AudioParameterBool& p) = 0;
+struct Visitor {
+    virtual ~Visitor = default;
+    virtual void accept(juce::AudioParameterFloat& p) = 0;
+    virtual void accept(juce::AudioParameterBool& p) = 0;
+    //...
 };
-//...
+
 class TypeErasedParameter {
 public:
     //...
-    void serialize(Serializer& s) { _impl->serialize(s); }
+    void visit(Visitor& v) { _impl->visit(v); }
 private:
     class ParameterConcept {
     public:
         virtual ~ParameterConcept() = default;
-        virtual void serialize(Serializer&) = 0;
+        virtual void visit(Vistior&) = 0;
     };
     template <class Parameter>
     class ParameterModel : public ParameterConcept {
     public:
         //...
-        void serialize(Serializer& s) override { serializer.serialize(_p); }
+        void visit(Visitor& v) override { v.accept(_p); }
 
     private:
         std::reference_wrapper<Parameter> _p;
@@ -959,6 +961,221 @@ private:
     std::unique_ptr<ParameterConcept> _impl;
 };
 ```
+
+---
+
+# Collection of `TypeErasedParameter`s
+
+```cpp
+std::vector<TypeErasedParameter> parameters;
+```
+
+---
+
+# Collection of `TypeErasedParameter`s
+
+```cpp {all|35-39|all}
+class ParameterHolder {
+  class TypeErasedParameter {
+  public:
+    template <class Parameter>
+    explicit TypeErasedParameter(Parameter& p)
+        : _impl{std::make_unique<ParameterModel<Parameter>>(p)} {}
+
+    void accept(Visitor& v) { _impl->accept(v); }
+
+  private:
+    class ParameterConcept {  // NOLINT
+    public:
+      virtual ~ParameterConcept() = default;
+      virtual void accept(Visitor& v) = 0;
+    };
+
+    template <class Parameter>
+    class ParameterModel : public ParameterConcept {
+    public:
+      explicit ParameterModel(Parameter& p) : _p{p} {}
+
+      void accept(Visitor& v) override { v.visit(_p.get()); }
+
+    private:
+      std::reference_wrapper<Parameter> _p;
+    };
+
+    std::unique_ptr<ParameterConcept> _impl;
+  };
+
+public:
+  explicit ParameterHolder(std::vector<TypeErasedParameter> parameters)
+      : _parameters{std::move(parameters)} {}
+
+  void accept(Visitor& v) {
+    for (auto& parameter : _parameters) {
+      parameter.accept(v);
+    }
+  }
+
+private:
+  std::vector<TypeErasedParameter> _parameters;
+};
+```
+
+<!-- But since we've already done all this work, why not add a Builder that helps in instantiating the ParameterHolder? -->
+
+---
+
+# Builder
+
+```cpp
+class ParameterHolder {
+  class TypeErasedParameter {
+  public:
+    template <class Parameter>
+    explicit TypeErasedParameter(Parameter& p)
+        : _impl{std::make_unique<ParameterModel<Parameter>>(p)} {}
+        //...
+  };
+
+public:
+  class Builder {
+  public:
+    template <class P, class... Args>
+    P& add(Args&&... args) {
+      auto parameter = std::make_unique<P>(std::forward<Args>(args)...);
+      auto& ref = *parameter;
+      _parametersForHolder.emplace_back(ref);
+      _parameters.push_back(std::move(parameter));
+      return ref;
+    }
+
+    ParameterHolder<Visitor> build(juce::AudioProcessor& p) && {
+      for (auto&& parameter : _parameters) {
+        p.addParameter(parameter.release());
+      }
+      return ParameterHolder{std::move(_parametersForHolder)};
+    }
+
+  private:
+    std::vector<std::unique_ptr<juce::AudioProcessorParameter>> _parameters;
+    std::vector<TypeErasedParameter> _parametersForHolder;
+  };
+
+  void accept(Visitor& v) {/* ... */}
+
+private:
+  explicit ParameterHolder(std::vector<TypeErasedParameter> parameters)
+      : _parameters{std::move(parameters)} {}
+
+  std::vector<TypeErasedParameter> _parameters;
+};
+```
+
+---
+
+# Usage
+
+```cpp
+class ParameterHolderAudioProcessor : public juce::AudioProcessor {
+public:
+  explicit ParameterHolderAudioProcessor(
+      ParameterHolder::Builder builder = {})
+      : floatParam{builder.add<juce::AudioParameterFloat>(
+            "floatParam",
+            "Float Param",
+            juce::NormalisableRange{1.f, 10.f},
+            5.f)},
+        boolParam{builder.add<juce::AudioParameterBool>("boolParam",
+                                                        "Bool Param",
+                                                        true)},
+        intParam{builder.add<juce::AudioParameterInt>("intParam",
+                                                      "Int Param",
+                                                      5,
+                                                      10,
+                                                      6)},
+        choiceParam{builder.add<juce::AudioParameterChoice>(
+            "choiceParam",
+            "Choice Param",
+            juce::StringArray{"choice 0", "choice 1", "choice 2"},
+            1)},
+        parameterHolder{std::move(builder).build(*this)} {}
+
+  //...
+private:
+  juce::AudioParameterFloat& floatParam;
+  juce::AudioParameterBool& boolParam;
+  juce::AudioParameterInt& intParam;
+  juce::AudioParameterChoice& choiceParam;
+  ParameterHolder parameterHolder;
+};
+```
+
+<!-- Once we have all this in place, adding serialization is a breeze. -->
+
+---
+
+# Serialization with Visitor
+
+```cpp
+using ParameterValue = std::variant<float, int, bool, std::string>;
+
+struct ParameterIdAndValue {
+  std::string id;
+  ParameterValue value;
+};
+
+using ParameterIdAndValueContainer = std::vector<ParameterIdAndValue>;
+
+class ParameterValuesExtractor : public Visitor {
+public:
+  ParameterValuesExtractor() = default;
+
+  void visit(juce::AudioParameterFloat& parameter) override {
+    visitImpl(parameter, parameter.get());
+  }
+
+  void visit(juce::AudioParameterBool& parameter) override {
+    visitImpl(parameter, parameter.get());
+  }
+
+  void visit(juce::AudioParameterInt& parameter) override {
+    visitImpl(parameter, parameter.get());
+  }
+
+  void visit(juce::AudioParameterChoice& parameter) override {
+    visitImpl(parameter, parameter.getCurrentChoiceName().toStdString());
+  }
+
+  [[nodiscard]] ParameterIdAndValueContainer result() const { return _result; }
+
+private:
+  template <class P, class V>
+  void visitImpl(const P& parameter, V&& value) {
+    _result.emplace_back(parameter.getParameterID().toStdString(),
+                         std::forward<V>(value));
+  }
+
+  ParameterIdAndValueContainer _result;
+
+  JUCE_DECLARE_NON_MOVEABLE(ParameterValuesExtractor)
+};
+
+inline ParameterIdAndValueContainer parameterIdsAndValues(
+    wolfsound::JuceParameterHolder& ph) {
+  ParameterValuesExtractor visitor;
+  ph.accept(visitor);
+  return visitor.result();
+}
+```
+
+---
+
+# What if we want to support custom parameter classes?
+
+-> make `ParameterHolder` templated on the `Visitor` class.
+
+---
+
+
 
 ---
 
