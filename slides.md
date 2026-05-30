@@ -43,6 +43,8 @@ ADC Japan 2026
     - DSP Pro on digital audio signal processing
     - Official JUCE C++ framework audio plugin development course (over 4,400 students enrolled)
 
+<!-- TODO: Map of Poland -->
+
 ---
 
 # Who here develops or uses audio plugins for digital audio workstations?
@@ -54,6 +56,17 @@ ADC Japan 2026
 # Who here uses JUCE to develop plugins?
 
 <!-- Well, let me tell you the story of developing my plugin -->
+
+---
+
+# Key terms
+
+- **plugin processor**
+- **plugin parameter**
+- **UI state**
+- **serialization**
+- **deserialization**
+- **preset** = plugin parameter values + metadata
 
 ---
 
@@ -602,7 +615,27 @@ void JsonSerializer::serialize(const Parameters& parameters,
 
 ---
 
-# Type-Erased Parameters (bottom-up)
+# Summary
+
+1. We can treat plugin parameters as a collection of `juce::RangedAudioParameter`s (just like `juce::AudioProcessorValueTreeState`) -> We lose type information
+1. We can treat plugin parameters individually using only concrete `juce::AudioParameter*` classes -> We cannot define operations on a collection of parameters
+
+# Summary
+
+1. Collection: Extensibility
+1. Singular: Interpretability
+
+---
+
+# How can we treat parameters as a collection while not losing type information? 🤔
+
+## Answer: Type Erasure!
+
+<!-- I want explain what type erasure is. Instead we'll discover this pattern while solving this problem. -->
+
+---
+
+# Type-Erased Parameters
 
 ---
 
