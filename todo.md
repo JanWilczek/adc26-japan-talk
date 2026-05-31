@@ -10,5 +10,6 @@
     - [ ] JUCE course
 - [ ] Consider listing all juce::AudioParameter classes in the Visitor members
 - [ ] List all juce::AudioParameter classes at the beginning of the presentation (show inheritance hierarchy)
+- [ ] Fix grey text on slide 48
 
 <style> .slidev-layout { zoom: 60%; }</style>

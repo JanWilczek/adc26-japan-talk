@@ -1296,16 +1296,27 @@ using JuceParameterHolder = ParameterHolder<JuceParameterVisitor>;
 
 # Implementations
 
-## `ParameterHolder` & example serialization
+## `ParameterHolder` with example serialization
 
 - https://github.com/JanWilczek/wolfsound-dsp-utils
     - *src/include/wolfsound/juce/wolfsound_ParameterHolder.hpp*
 
-## `ParameterHolder` serialization & presets (WIP)
+## `ParameterHolder` with serialization and presets (WIP)
 
 - https://github.com/JanWilczek/EdenSynth/tree/add-xml-presets-macos-var-params
     - *EdenSynth/SharedCode/include/presets/Preset.h*
     - *EdenSynth/SharedCode_test/source/presets_test/PresetsTest.cpp*
+
+---
+
+# References
+
+1. JUCE source code
+1. Original paper on type erasure
+1. Sean Parent's talk
+1. Klaus Iglberger's book
+
+<!-- Klaus Iglberger has multiple CppCon talks regarding type erasure. -->
 
 ---
 
@@ -1314,9 +1325,9 @@ using JuceParameterHolder = ParameterHolder<JuceParameterVisitor>;
 1. General: Use the Type Erasure design pattern together with the Visitor design pattern to manage collections of strongly typed objects of different classes
 
 1. Specific: Use Type Erasure to perform operations on all parameter objects of your plugin without losing their type
-    1. Keep references to concrete parameter objects to access them individually
+    - Keep references to concrete parameter objects to access them individually
 
-1. Try out/tweak `wolfsound::ParameterHolder` from *github.com/JanWilczek/wolfsound-dsp-utils*
+1. Try out/tweak `wolfsound::ParameterHolder` from *[github.com/JanWilczek/wolfsound-dsp-utils](https://github.com/JanWilczek/wolfsound-dsp-utils)*
 
-1. Check out the free official JUCE plugin development online course at *wolfsoundacademy.com/juce*
+1. Check out the free official JUCE plugin development online course at [*wolfsoundacademy.com/juce*](https://wolfsoundacademy.com/juce)
 
