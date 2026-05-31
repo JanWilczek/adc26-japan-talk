@@ -1103,6 +1103,8 @@ private:
 
 # Builder
 
+<style> .slidev-layout { zoom: 60%; }</style>
+
 ```cpp
 class ParameterHolder {
   class TypeErasedParameter {
