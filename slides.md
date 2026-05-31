@@ -1115,7 +1115,7 @@ public:
         return ref;
     }
 
-    ParameterHolder<Visitor> build(juce::AudioProcessor& p) && {
+    ParameterHolder build(juce::AudioProcessor& p) && {
         for (auto&& parameter : _parameters) {
             p.addParameter(parameter.release());
         }
@@ -1156,7 +1156,7 @@ public:
       return ref;
     }
 
-    ParameterHolder<Visitor> build(juce::AudioProcessor& p) && {
+    ParameterHolder build(juce::AudioProcessor& p) && {
       for (auto&& parameter : _parameters) {
         p.addParameter(parameter.release());
       }
@@ -1183,9 +1183,9 @@ private:
 # Usage
 
 ```cpp {all|3-4|5-6,17|13,21}
-class ParameterHolderAudioProcessor : public juce::AudioProcessor {
+class PluginProcessor : public juce::AudioProcessor {
 public:
-  explicit ParameterHolderAudioProcessor(
+  explicit PluginProcessor(
       ParameterHolder::Builder builder = {})
       : floatParam{builder.add<juce::AudioParameterFloat>(
             "floatParam", "Float Param", juce::NormalisableRange{1.f, 10.f}, 5.f)},
@@ -1212,61 +1212,47 @@ private:
 
 ---
 
-# Serialization with Visitor
+# Serialization using a Visitor
 
-```cpp
-using ParameterValue = std::variant<float, int, bool, std::string>;
-
+```cpp {none|1-4|6|9-14|17-22|15}
 struct ParameterIdAndValue {
   std::string id;
-  ParameterValue value;
+  std::variant<float, int, bool, std::string> value;
 };
-
-using ParameterIdAndValueContainer = std::vector<ParameterIdAndValue>;
 
 class ParameterValuesExtractor : public Visitor {
 public:
   ParameterValuesExtractor() = default;
-
-  void visit(juce::AudioParameterFloat& parameter) override {
-    visitImpl(parameter, parameter.get());
-  }
-
-  void visit(juce::AudioParameterBool& parameter) override {
-    visitImpl(parameter, parameter.get());
-  }
-
-  void visit(juce::AudioParameterInt& parameter) override {
-    visitImpl(parameter, parameter.get());
-  }
-
+  void visit(juce::AudioParameterFloat& parameter) override { visitImpl(parameter, parameter.get()); }
+  void visit(juce::AudioParameterBool& parameter) override { visitImpl(parameter, parameter.get()); }
+  void visit(juce::AudioParameterInt& parameter) override { visitImpl(parameter, parameter.get()); }
   void visit(juce::AudioParameterChoice& parameter) override {
-    visitImpl(parameter, parameter.getCurrentChoiceName().toStdString());
+      visitImpl(parameter, parameter.getCurrentChoiceName().toStdString());
   }
-
-  [[nodiscard]] ParameterIdAndValueContainer result() const { return _result; }
-
+  [[nodiscard]] std::vector<ParameterIdAndValue> result() const { return _result; }
 private:
   template <class P, class V>
   void visitImpl(const P& parameter, V&& value) {
-    _result.emplace_back(parameter.getParameterID().toStdString(),
-                         std::forward<V>(value));
+    _result.emplace_back(parameter.getParameterID().toStdString(), std::forward<V>(value));
   }
 
   std::vector<ParameterIdAndValue> _result;
-
-  JUCE_DECLARE_NON_MOVEABLE(ParameterValuesExtractor)
 };
+```
 
-inline std::vector<ParameterIdAndValue> parameterIdsAndValues(
-    wolfsound::JuceParameterHolder& ph) {
+<!-- Then we can define SerialisationTraits for ParameterIdAndValue -->
+
+---
+
+# Serialization using a Visitor
+
+```cpp
+inline std::vector<ParameterIdAndValue> parameterIdsAndValues(ParameterHolder& ph) {
   ParameterValuesExtractor visitor;
   ph.accept(visitor);
   return visitor.result();
 }
 ```
-
-<!-- Then we can define SerialisationTraits for ParameterIdAndValue -->
 
 ---
 
