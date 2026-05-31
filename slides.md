@@ -232,6 +232,8 @@ EdenSynthAudioProcessor::EdenSynthAudioProcessor()
 
 # Parameters via `AudioProcessorValueTreeState`
 
+## Usage in audio processing
+
 ```cpp
 void EdenSynthAudioProcessor::processBlock(AudioBuffer<float>& buffer,
                                            MidiBuffer& midiMessages) {
@@ -253,6 +255,8 @@ void EdenSynthAudioProcessor::processBlock(AudioBuffer<float>& buffer,
 
 # Parameters via `AudioProcessorValueTreeState`
 
+## Serialization
+
 ```cpp
 void EdenSynthAudioProcessor::getStateInformation(MemoryBlock& destData) {
   auto state = _pluginParameters.copyState();
@@ -264,6 +268,8 @@ void EdenSynthAudioProcessor::getStateInformation(MemoryBlock& destData) {
 ---
 
 # Parameters via `AudioProcessorValueTreeState`
+
+## Deserialization
 
 ```cpp
 void EdenSynthAudioProcessor::setStateInformation(const void* data,
@@ -279,6 +285,10 @@ void EdenSynthAudioProcessor::setStateInformation(const void* data,
 ```
 
 ---
+
+# Parameters via `AudioProcessorValueTreeState`
+
+## Usage in the plugin editor
 
 ```cpp {all|3|11-12|5}
 class GeneralSettingsComponent : public Component {
@@ -304,6 +314,10 @@ private:
 
 ---
 
+# Parameters via `AudioProcessorValueTreeState`
+
+## Usage in the plugin editor
+
 ```cpp {all|7-8}
 GeneralSettingsComponent::GeneralSettingsComponent(
     AudioProcessorValueTreeState& valueTreeState)
@@ -325,6 +339,8 @@ GeneralSettingsComponent::GeneralSettingsComponent(
 ```
 
 ---
+layout: center
+---
 
 # How to add presets? 🤔
 
@@ -332,7 +348,7 @@ GeneralSettingsComponent::GeneralSettingsComponent(
 
 # Reuse `get/setStateInformation()`
 
-```cpp
+```cpp {all|2-3|4-6}
 void savePreset(const std::string& presetName) {
     juce::MemoryBlock presetData;
     pluginProcessor.getStateInformation(result);
@@ -346,7 +362,7 @@ void savePreset(const std::string& presetName) {
 
 # Reuse `get/setStateInformation()`
 
-```cpp
+```cpp {all|2|4-9|11-12}
 void loadPreset(const std::string& presetName) {
   const auto presetFile = juce::File{presetPathFromName(name)};
 
@@ -366,7 +382,7 @@ void loadPreset(const std::string& presetName) {
 
 # Preset structure when using APVTS
 
-```xml
+```xml {all|4,7,9,15,22}
 <?xml version="1.0" encoding="UTF-8"?>
 
 <EdenSynthParameters>
@@ -381,37 +397,10 @@ void loadPreset(const std::string& presetName) {
   <PARAM id="envelope.adbdr.release.time" value="300.0"/>
   <PARAM id="filter.contourAmount" value="1.0"/>
   <PARAM id="filter.cutoff" value="1.0"/>
-  <PARAM id="filter.env.adsr.attack.time" value="50.0"/>
-  <PARAM id="filter.env.adsr.decay.time" value="20.0"/>
-  <PARAM id="filter.env.adsr.release.time" value="300.0"/>
-  <PARAM id="filter.env.adsr.sustain.level" value="0.9000000357627869"/>
   <PARAM id="filter.passbandAttenuation" value="0.0"/>
   <PARAM id="filter.resonance" value="0.0"/>
   <PARAM id="frequencyOfA4" value="440.0"/>
-  <PARAM id="gen.osc1.centTransposition" value="0.0"/>
-  <PARAM id="gen.osc1.generatorName" value="0.0"/>
-  <PARAM id="gen.osc1.isRealTime" value="0.0"/>
-  <PARAM id="gen.osc1.octaveTransposition" value="0.0"/>
-  <PARAM id="gen.osc1.on" value="1.0"/>
-  <PARAM id="gen.osc1.semitoneTransposition" value="0.0"/>
-  <PARAM id="gen.osc1.volume" value="1.0"/>
-  <PARAM id="gen.osc1.waveTable" value="9.0"/>
-  <PARAM id="gen.osc2.centTransposition" value="0.0"/>
-  <PARAM id="gen.osc2.generatorName" value="0.0"/>
-  <PARAM id="gen.osc2.isRealTime" value="0.0"/>
-  <PARAM id="gen.osc2.octaveTransposition" value="0.0"/>
-  <PARAM id="gen.osc2.on" value="1.0"/>
-  <PARAM id="gen.osc2.semitoneTransposition" value="0.0"/>
-  <PARAM id="gen.osc2.volume" value="1.0"/>
-  <PARAM id="gen.osc2.waveTable" value="9.0"/>
-  <PARAM id="gen.osc3.centTransposition" value="0.0"/>
-  <PARAM id="gen.osc3.generatorName" value="0.0"/>
-  <PARAM id="gen.osc3.isRealTime" value="0.0"/>
-  <PARAM id="gen.osc3.octaveTransposition" value="0.0"/>
-  <PARAM id="gen.osc3.on" value="1.0"/>
-  <PARAM id="gen.osc3.semitoneTransposition" value="0.0"/>
-  <PARAM id="gen.osc3.volume" value="1.0"/>
-  <PARAM id="gen.osc3.waveTable" value="9.0"/>
+  <!-- more parameters... -->
   <PARAM id="output.volume" value="1.0"/>
   <PARAM id="pitchBend.semitonesDown" value="-12.0"/>
   <PARAM id="pitchBend.semitonesUp" value="2.0"/>
@@ -419,12 +408,15 @@ void loadPreset(const std::string& presetName) {
 </EdenSynthParameters>
 ```
 
+<!-- What's wrong with this code? (choice and bool params are float)-->
 <!-- not very readable, since all values are float -->
 <!-- APVTS stores parameters internally as references to RangedAudioParameter (base class) -->
 
 ---
 
 # APVTS-based parameters
+
+<style> .slidev-layout { zoom: 90%; }</style>
 
 ## Pros
 
