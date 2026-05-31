@@ -881,7 +881,33 @@ std::vector<TypeErasedParameter> parameters;
 
 # Operations
 
-```cpp {1-3,7,12,18}
+````md magic-move
+```cpp {1-3|all}
+void foo(juce::AudioParameterFloat& p);
+void foo(juce::AudioParameterBool& p);
+//...
+class TypeErasedParameter {
+public:
+    //...
+
+private:
+    class ParameterConcept {
+    public:
+        virtual ~ParameterConcept() = default;
+    };
+
+    template <class Parameter>
+    class ParameterModel : public ParameterConcept {
+    public:
+        //...
+    private:
+        Parameter& _p;
+    };
+
+    std::unique_ptr<ParameterConcept> _impl;
+};
+```
+```cpp {all|1-3,7,12,18}
 void foo(juce::AudioParameterFloat& p);
 void foo(juce::AudioParameterBool& p);
 //...
@@ -902,11 +928,12 @@ private:
         void foo() override { foo(_p); }
 
     private:
-        std::reference_wrapper<Parameter> _p;
+        Parameter& _p;
     };
     std::unique_ptr<ParameterConcept> _impl;
 };
 ```
+````
 
 ---
 
@@ -933,7 +960,7 @@ private:
         void serializeToJson() override { serializeToJson(_p); }
 
     private:
-        std::reference_wrapper<Parameter> _p;
+        Parameter& _p;
     };
     std::unique_ptr<ParameterConcept> _impl;
 };
@@ -968,7 +995,7 @@ private:
         void serialize(Serializer& s) override { serializer.serialize(_p); }
 
     private:
-        std::reference_wrapper<Parameter> _p;
+        Parameter& _p;
     };
     std::unique_ptr<ParameterConcept> _impl;
 };
@@ -1005,7 +1032,7 @@ private:
         void visit(Visitor& v) override { v.accept(_p); }
 
     private:
-        std::reference_wrapper<Parameter> _p;
+        Parameter& _p;
     };
     std::unique_ptr<ParameterConcept> _impl;
 };
@@ -1048,7 +1075,7 @@ class ParameterHolder {
       void accept(Visitor& v) override { v.visit(_p.get()); }
 
     private:
-      std::reference_wrapper<Parameter> _p;
+      Parameter& _p;
     };
 
     std::unique_ptr<ParameterConcept> _impl;
