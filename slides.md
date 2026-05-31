@@ -1103,6 +1103,36 @@ private:
 
 # Builder
 
+```cpp
+class Builder {
+public:
+    template <class P, class... Args>
+    P& add(Args&&... args) {
+        auto parameter = std::make_unique<P>(std::forward<Args>(args)...);
+        auto& ref = *parameter;
+        _parametersForHolder.emplace_back(ref);
+        _parameters.push_back(std::move(parameter));
+        return ref;
+    }
+  
+    ParameterHolder<Visitor> build(juce::AudioProcessor& p) && {
+        for (auto&& parameter : _parameters) {
+            p.addParameter(parameter.release());
+        }
+        return ParameterHolder{std::move(_parametersForHolder)};
+    }
+
+private:
+    std::vector<std::unique_ptr<juce::AudioProcessorParameter>> _parameters;
+    std::vector<TypeErasedParameter> _parametersForHolder;
+};
+};
+```
+
+---
+
+# Builder
+
 <style> .slidev-layout { zoom: 60%; }</style>
 
 ```cpp
