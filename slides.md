@@ -436,12 +436,21 @@ void loadPreset(const std::string& presetName) {
 - Other APVTS drawbacks, e.g., requires a message thread
 
 ---
+layout: center
+class: text-center
+---
 
 # What we did in the official JUCE course
 
+## "References only"
+
+<img class="mx-auto mt-8" src="./assets/JUCECourseLogo.png" width="200"/>
+
 ---
 
-```cpp
+## Parameters via references only
+
+```cpp {all|7-9|6,11}
 class PluginProcessor : public juce::AudioProcessor {
 public:
     PluginProcessor();
@@ -457,6 +466,10 @@ public:
 ```
 
 ---
+
+## Parameters via references only
+
+<style> .slidev-layout { zoom: 60%; }</style>
 
 ```cpp
 namespace {
@@ -495,12 +508,41 @@ juce::AudioParameterChoice& createWaveformParameter(
           juce::ParameterID{"modulation.waveform", versionHint},
           "Modulation waveform", juce::StringArray{"Sine", "Triangle"}, 0));
 }
-}
+} // namespace
 
 Parameters::Parameters(juce::AudioProcessor& p)
     : rate{createModulationRateParameter(p)},
       bypassed{createBypassedParameter(p)},
       waveform{createWaveformParameter(p)} {}
+```
+
+---
+
+## Parameters via references only
+
+```cpp {all|21|11-16|2|3,5|4}
+namespace {
+auto& addParameterToProcessor(juce::AudioProcessor& processor, auto parameter) {
+  auto& result = *parameter;
+  processor.addParameter(parameter.release());
+  return result;
+}
+
+juce::AudioParameterFloat& createModulationRateParameter(
+    juce::AudioProcessor& processor) {
+  constexpr auto versionHint = 1;
+  return addParameterToProcessor(
+      processor,
+      std::make_unique<juce::AudioParameterFloat>(
+          juce::ParameterID{"modulation.rate", versionHint}, "Modulation rate",
+          juce::NormalisableRange<float>{0.1f, 20.f, 0.01f, 0.4f}, 5.f,
+          juce::AudioParameterFloatAttributes{}.withLabel("Hz")));
+}
+} // namespace
+
+Parameters::Parameters(juce::AudioProcessor& p)
+    : rate{createModulationRateParameter(p)},
+        /* ... */ {}
 ```
 
 ---
