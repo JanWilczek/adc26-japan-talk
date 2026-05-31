@@ -807,12 +807,6 @@ private:
 
 std::vector<TypeErasedParameter<?>> parameters;
 ```
-````
-
----
-
-# `TypeErasedParameter`
-
 ```cpp
 class TypeErasedParameter {
 public:
@@ -831,12 +825,7 @@ private:
     std::unique_ptr<ParameterModel<?>> _impl; // <- problem
 };
 ```
-
----
-
-# `TypeErasedParameter`
-
-```cpp {all|17}
+```cpp
 class TypeErasedParameter {
 public:
     template <class Parameter>
@@ -859,12 +848,7 @@ private:
     std::unique_ptr<ParameterConcept> _impl;
 };
 ```
-
----
-
-# `TypeErasedParameter`
-
-```cpp {17|all|23}
+```cpp
 class TypeErasedParameter {
 public:
     template <class Parameter>
@@ -881,7 +865,7 @@ private:
     public:
         ParameterModel(Parameter& p) : _p{p} {}
     private:
-        std::reference_wrapper<Parameter> _p; // copyable
+        Parameter& _p;
     };
 
     std::unique_ptr<ParameterConcept> _impl;
@@ -889,7 +873,7 @@ private:
 
 std::vector<TypeErasedParameter> parameters;
 ```
-
+````
 
 <!-- Nice! We have our TypeErasedParameter, but what have achieved? Well, we can now store parameters of arbitrary types in a vector. We don't use any hacks, we don't use the pointer to base in the public-facing API, and we are entirely type-safe. Now, we want to make useful operations on the parameters; how?  -->
 
