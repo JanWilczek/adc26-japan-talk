@@ -722,22 +722,31 @@ void JsonSerializer::serialize(const Parameters& parameters,
 
 # Summary so far
 
-1. We can treat plugin parameters as a collection of `juce::RangedAudioParameter`s (just like `juce::AudioProcessorValueTreeState`) -> We lose type information
-1. We can treat plugin parameters individually using only concrete `juce::AudioParameter*` classes -> We cannot define operations on a collection of parameters
-
-# Summary so far
-
-1. Collection: Extensibility
-1. Singular: Interpretability
+1. We can treat plugin parameters as a collection of `juce::RangedAudioParameter`s (just like `juce::AudioProcessorValueTreeState`) $\implies$ We lose type information
+1. We can treat plugin parameters individually using only concrete `juce::AudioParameterFloat|Bool|Int|Choice` classes $\implies$ We cannot (easily) define operations on a collection of parameters
 
 ---
 
-# How can we treat parameters as a collection while not losing type information? 🤔
+# Summary so far
 
-## Answer: Type Erasure!
+1. Parameter collection: Extensibility
+1. Individual parameters: Interpretability
+
+---
+layout: center
+---
+
+# How can we treat parameters as a collection without losing type information? 🤔
+
+<v-click>
+<h2>Answer: Type Erasure!</h2>
+</v-click>
 
 <!-- I want explain what type erasure is. Instead we'll discover this pattern while solving this problem. -->
 
+---
+layout: center
+class: text-center
 ---
 
 # Type-Erased Parameters
@@ -1279,7 +1288,7 @@ inline std::vector<ParameterIdAndValue> parameterIdsAndValues(
 
 # What if we want to support custom parameter classes?
 
--> make `ParameterHolder` templated on the `Visitor` class.
+$\implies$ make `ParameterHolder` templated on the `Visitor` class.
 
 ---
 
