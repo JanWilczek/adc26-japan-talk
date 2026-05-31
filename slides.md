@@ -765,6 +765,7 @@ std::vector<TypeErasedParameter> parameters;
 
 # `TypeErasedParameter`
 
+````md magic-move
 ```cpp
 class TypeErasedParameter {
 public:
@@ -774,11 +775,6 @@ private:
     juce::AudioParameterFloat& _p;
 };
 ```
-
----
-
-# `TypeErasedParameter`
-
 ```cpp
 class TypeErasedParameter {
 public:
@@ -789,11 +785,6 @@ private:
     Parameter& _p;
 };
 ```
-
----
-
-# `TypeErasedParameter`
-
 ```cpp
 template <class Parameter>
 class TypeErasedParameter {
@@ -804,11 +795,6 @@ private:
     Parameter& _p;
 };
 ```
-
----
-
-# `TypeErasedParameter`
-
 ```cpp
 template <class Parameter>
 class TypeErasedParameter {
@@ -821,6 +807,7 @@ private:
 
 std::vector<TypeErasedParameter<?>> parameters;
 ```
+````
 
 ---
 
