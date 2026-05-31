@@ -1103,7 +1103,7 @@ private:
 
 # Builder
 
-```cpp
+```cpp {all|20|21|3-4|5|6|7,21|9|8,20|12-17|13-15,20|16,21|12|all}
 class Builder {
 public:
     template <class P, class... Args>
@@ -1134,7 +1134,7 @@ private:
 
 <style> .slidev-layout { zoom: 60%; }</style>
 
-```cpp
+```cpp {11-32|36-38}
 class ParameterHolder {
   class TypeErasedParameter {
   public:
@@ -1181,6 +1181,8 @@ private:
 ---
 
 # Usage
+
+<style> .slidev-layout { zoom: 80%; }</style>
 
 ```cpp
 class ParameterHolderAudioProcessor : public juce::AudioProcessor {
