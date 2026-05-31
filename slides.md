@@ -729,8 +729,8 @@ void JsonSerializer::serialize(const Parameters& parameters,
 
 # Summary so far
 
-1. Parameter collection: Extensibility
-1. Individual parameters: Interpretability
+1. Parameter collection: extensibility
+1. Individual parameters: interpretability
 
 ---
 layout: center
@@ -1255,10 +1255,16 @@ std::vector<ParameterIdAndValue> parameterIdsAndValues(ParameterHolder& ph) {
 ```
 
 ---
+class: "!text-black"
+---
 
 # What if we want to support custom parameter classes?
 
+<div>
+
 $\implies$ make `ParameterHolder` templated on the `Visitor` class.
+
+</div>
 
 ---
 
