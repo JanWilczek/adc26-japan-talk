@@ -47,6 +47,21 @@ ADC Japan 2026
 
 ---
 
+<img class="mb-2" src="./assets/Japan_Poland_Locator.png" width="80%"/>
+
+<div class="grid grid-cols-2 gap-4">
+  <div>
+        <img class="border-2" src="./assets/Flag_of_Poland.svg.webp"/>
+  </div>
+  <div>
+        <img class="border-2" src="./assets/Flag_of_Japan.svg.webp"/>
+  </div>
+</div>
+
+*Source: https://en.wikipedia.org/wiki/Japan-Poland_relations, accessed May 31, 2026.*
+
+---
+
 # Who here develops or uses audio plugins for digital audio workstations?
 
 <!-- either professionally or as a hobby? -->
