@@ -19,6 +19,9 @@ comark: true
 # duration of the presentation
 duration: 50min
 lineNumbers: true
+fonts:
+  mono: CaskaydiaCove Nerd Font
+  local: CaskaydiaCove Nerd Font
 ---
 
 # Type-Erased Audio Parameters
@@ -62,11 +65,15 @@ ADC Japan 2026
 *Source: https://en.wikipedia.org/wiki/Japan-Poland_relations, accessed May 31, 2026.*
 
 ---
+layout: center
+---
 
 # Who here develops or uses audio plugins for digital audio workstations?
 
 <!-- either professionally or as a hobby? -->
 
+---
+layout: center
 ---
 
 # Who here uses JUCE to develop plugins?
@@ -77,13 +84,17 @@ ADC Japan 2026
 
 # Key terms
 
-- **plugin processor**
-- **plugin parameter**
-- **UI state**
-- **serialization**
-- **deserialization**
+- **audio plugin**: a plugin for a digital audio workstation (DAW)
+- **plugin processor**: the core of an audio plugin; responsible for plugin metadata, audio processing, and state management
+- **plugin editor**: user interface (UI) of the plugin
+- **plugin parameter**: a user-controllable value influencing audio processing of a plugin
+- **UI state**: non-audio-related state
+- **serialization**: process of externalizing state (for example, to a JSON file)
+- **deserialization**: process of loading state from an external source (for example, a JSON file)
 - **preset** = plugin parameter values + metadata
 
+---
+layout: center
 ---
 
 # The Story of a Synth
