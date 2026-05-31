@@ -13,11 +13,12 @@ class: text-center
 drawings:
   persist: false
 # slide transition: https://sli.dev/guide/animations.html#slide-transitions
-transition: slide-left
+transition: undefined
 # enable Comark Syntax: https://comark.dev/syntax/markdown
 comark: true
 # duration of the presentation
-duration: 35min
+duration: 50min
+lineNumbers: true
 ---
 
 # Type-Erased Audio Parameters
