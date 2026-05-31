@@ -1217,4 +1217,14 @@ using JuceParameterHolder = ParameterHolder<JuceParameterVisitor>;
 
 ---
 
+# Summary
+
+1. General: Use the Type Erasure design pattern together with the Visitor design pattern to manage collections of strongly typed objects of different classes
+
+1. Specific: Use Type Erasure to perform operations on all parameter objects of your plugin without losing their type
+
+1. Try out/tweak `wolfsound::ParameterHolder` from *https://github.com/JanWilczek/wolfsound-dsp-utils*.
+
+---
+
 # Courses
