@@ -20,6 +20,7 @@ comark: true
 duration: 50min
 lineNumbers: true
 fonts:
+  sans: Montserrat, Open Sans
   mono: CaskaydiaCove Nerd Font
   local: CaskaydiaCove Nerd Font
 ---
