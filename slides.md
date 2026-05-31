@@ -1311,10 +1311,10 @@ using JuceParameterHolder = ParameterHolder<JuceParameterVisitor>;
 
 # References
 
-1. JUCE source code
-1. Original paper on type erasure
-1. Sean Parent's talk
-1. Klaus Iglberger's book
+1. JUCE C++ framework source code, https://github.com/juce-framework/JUCE
+1. Kevlin Henney, *Valued Conversions*, *C++ Report* July-August 2000
+1. Sean Parent, *Inheritance Is the Base Class of Evil*, GoingNative 2013
+1. Klaus Iglberger, *C++ Software Design: Design Principles and Patterns for High-Quality Software*, O'Reilly 2022
 
 <!-- Klaus Iglberger has multiple CppCon talks regarding type erasure. -->
 
