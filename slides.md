@@ -448,7 +448,7 @@ class: text-center
 
 ---
 
-## Parameters via references only
+# Parameters via references only
 
 ```cpp {all|7-9|6,11}
 class PluginProcessor : public juce::AudioProcessor {
@@ -467,7 +467,7 @@ public:
 
 ---
 
-## Parameters via references only
+# Parameters via references only
 
 <style> .slidev-layout { zoom: 60%; }</style>
 
@@ -518,7 +518,7 @@ Parameters::Parameters(juce::AudioProcessor& p)
 
 ---
 
-## Parameters via references only
+# Parameters via references only
 
 ```cpp {all|21|11-16|2|3,5|4}
 namespace {
@@ -545,15 +545,19 @@ Parameters::Parameters(juce::AudioProcessor& p)
         /* ... */ {}
 ```
 
+<!-- Note that we must release ownership -->
+
 ---
 
-# `processBlock()`
+# Parameters via references only
+
+## Usage in audio processing
 
 ```cpp
 void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                                    juce::MidiBuffer&) {
   //...
-  tremolo.setModulationRateHz(parameters.rate);
+  tremolo.setModulationRateHz(parameters.rate.get());
   tremolo.setLfoWaveform(
       static_cast<Tremolo::LfoWaveform>(parameters.waveform.getIndex()));
   bypassTransitionSmoother.setBypass(parameters.bypassed.get());
@@ -564,9 +568,11 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
 
 ---
 
-# UI
+# Parameters via references only
 
-```cpp
+## Usage in UI
+
+```cpp {all|11-12|3}
 class PluginEditor : public juce::AudioProcessorEditor {
 public:
   explicit PluginEditor(PluginProcessor&);
@@ -587,9 +593,11 @@ private:
 
 ---
 
-# UI
+# Parameters via references only
 
-```cpp
+## Usage in UI
+
+```cpp {none|1,4}
 PluginEditor::PluginEditor(PluginProcessor& p)
     : AudioProcessorEditor(&p),
       waveformAttachment{p.parameters.waveform, waveformComboBox},
@@ -599,9 +607,11 @@ PluginEditor::PluginEditor(PluginProcessor& p)
 
 ---
 
-# Serialization
+# Parameters via references only
 
-```cpp
+## Serialization
+
+```cpp {none|1-4|6-14|3}
 void PluginProcessor::getStateInformation(juce::MemoryBlock& destData) {
   juce::MemoryOutputStream outputStream{destData, true};
   JsonSerializer::serialize(parameters, outputStream);
@@ -618,11 +628,17 @@ void PluginProcessor::setStateInformation(const void* data, int sizeInBytes) {
 }
 ```
 
+<!-- serialize() hides the complexity -->
+
 ---
 
-# Serialization
+# Parameters via references only
 
-```cpp
+## Serialization
+
+<style> .slidev-layout { zoom: 80%; }</style>
+
+```cpp {all|2-4,24-25}
 struct SerializableParameters {
   float rate;
   bool bypassed;
@@ -652,10 +668,12 @@ struct SerializableParameters {
 };
 ```
 
+<!-- Key point: we need a separate struct that describes parameter values (duplication) -->
+
 ---
 
 
-```cpp
+```cpp {9-10|1-7,11|17-20}
 SerializableParameters from(const :Parameters& p) {
   return {
       .rate = p.rate.get(),
@@ -663,7 +681,6 @@ SerializableParameters from(const :Parameters& p) {
       .waveform = p.waveform.getCurrentChoiceName(),
   };
 }
-}  // namespace
 
 void JsonSerializer::serialize(const Parameters& parameters,
                                juce::OutputStream& output) {
