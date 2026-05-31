@@ -753,42 +753,6 @@ class: text-center
 
 ---
 
-## ParameterWrapper
-
-```cpp
-template <class Parameter>
-class ParameterWrapper {
-public:
-    ParameterWrapper(Parameter& p) : _p{p} {}
-
-private:
-    Parameter& _p;
-};
-```
-
----
-
-## ParameterWrapper
-
-```cpp
-template <class Parameter>
-class ParameterWrapper {
-public:
-    ParameterWrapper(Parameter& p) : _p{p} {}
-
-
-
-private:
-    Parameter& _p;
-};
-```
-
----
-
-# Type-Erased Parameters (top-down)
-
----
-
 # Collection of parameters
 
 ```cpp
