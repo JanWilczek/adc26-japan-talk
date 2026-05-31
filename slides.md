@@ -1311,10 +1311,11 @@ using JuceParameterHolder = ParameterHolder<JuceParameterVisitor>;
 
 # References
 
-1. JUCE C++ framework source code, https://github.com/juce-framework/JUCE
+1. JUCE C++ framework source code, *https://github.com/juce-framework/JUCE*
 1. Kevlin Henney, *Valued Conversions*, *C++ Report* July-August 2000
 1. Sean Parent, *Inheritance Is the Base Class of Evil*, GoingNative 2013
 1. Klaus Iglberger, *C++ Software Design: Design Principles and Patterns for High-Quality Software*, O'Reilly 2022
+1. Jan Wilczek & the JUCE team, *Official JUCE Audio Plugin Development Online Course*, [*https://wolfsoundacademy.com/juce*](https://wolfsoundacademy.com/juce) (available for free)
 
 <!-- Klaus Iglberger has multiple CppCon talks regarding type erasure. -->
 
@@ -1331,7 +1332,6 @@ using JuceParameterHolder = ParameterHolder<JuceParameterVisitor>;
 
 1. Try out/tweak `wolfsound::ParameterHolder` from *[github.com/JanWilczek/wolfsound-dsp-utils](https://github.com/JanWilczek/wolfsound-dsp-utils)*
 
-1. Check out the free official JUCE plugin development online course at [*wolfsoundacademy.com/juce*](https://wolfsoundacademy.com/juce)
 
 5. Contact me via contact@thewolfsound.com
 
