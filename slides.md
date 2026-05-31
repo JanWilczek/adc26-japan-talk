@@ -1247,7 +1247,7 @@ private:
 # Serialization using a Visitor
 
 ```cpp
-inline std::vector<ParameterIdAndValue> parameterIdsAndValues(ParameterHolder& ph) {
+std::vector<ParameterIdAndValue> parameterIdsAndValues(ParameterHolder& ph) {
   ParameterValuesExtractor visitor;
   ph.accept(visitor);
   return visitor.result();
@@ -1267,12 +1267,20 @@ $\implies$ make `ParameterHolder` templated on the `Visitor` class.
 ```cpp
 template <class Visitor>
 class ParameterHolder {
-//...
+  //...
 public:
   void accept(Visitor& v) {/* ... */}
-//...
+  //...
 };
+```
 
+---
+
+# What if we want to support custom parameter classes?
+
+## A good default
+
+```cpp
 struct JuceParameterVisitor {
   virtual ~JuceParameterVisitor() = default;
   virtual void visit(juce::AudioParameterBool&) = 0;
