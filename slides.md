@@ -103,6 +103,8 @@ layout: center
 
 ---
 
+<style> .slidev-layout { zoom: 60%; }</style>
+
 # Plugin processor
 
 ```cpp {all|40}
@@ -183,7 +185,29 @@ EdenSynthAudioProcessor::EdenSynthAudioProcessor()
 
 ## New API
 
-```cpp magicmove
+````md magic-move
+```cpp
+EdenSynthAudioProcessor::EdenSynthAudioProcessor()
+    : //...
+      _pluginParameters{*this, nullptr} {
+  using Parameter = juce::AudioProcessorValueTreeState::Parameter;
+
+  _pluginParameters.createAndAddParameter(std::make_unique<Parameter>(
+      "pitchBend.semitonesDown", "Pitch bend semitones down",
+      NormalisableRange<float>(-24.f, 0.f, 1.f), -12.f));
+  _pluginParameters.createAndAddParameter(std::make_unique<Parameter>(
+      "pitchBend.semitonesUp", "Pitch bend semitones up",
+      NormalisableRange<float>(0.f, 24.f, 1.f), 2.f));
+  _pluginParameters.createAndAddParameter(std::make_unique<Parameter>(
+      "frequencyOfA4", "Frequency of A4",
+      NormalisableRange<float>(400.f, 500.f, 0.1f), 440.f,
+      AudioProcessorValueTreeStateParameterAttributes{}.withLabel("Hz")));
+  // more parameters...
+
+  _pluginParameters.state = ValueTree(Identifier("EdenSynthParameters"));
+}
+```
+```cpp
 EdenSynthAudioProcessor::EdenSynthAudioProcessor()
     : //...
       _pluginParameters{*this, nullptr, "EdenSynthParameters", {
@@ -200,6 +224,7 @@ EdenSynthAudioProcessor::EdenSynthAudioProcessor()
           // more parameters...
       }} {}
 ```
+````
 
 <!-- ...but it doesn't solve the issues of APVTS which I will show next -->
 
