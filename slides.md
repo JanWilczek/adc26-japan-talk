@@ -959,9 +959,9 @@ private:
     std::unique_ptr<ParameterConcept> _impl;
 };
 ```
+````
 
 <!-- I don't like the approach using free functions; we would probably need to come up with long function names to avoid argument-dependent lookup. Furthermore, each serialization mechanism, requires adding a separate function or linking to a separate free function definition set. Can we do better? -->
-````
 
 ---
 
