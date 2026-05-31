@@ -933,12 +933,6 @@ private:
     std::unique_ptr<ParameterConcept> _impl;
 };
 ```
-````
-
----
-
-# Operations
-
 ```cpp {1-3,7,12,18}
 void serializeToJson(juce::AudioParameterFloat& p);
 void serializeToJson(juce::AudioParameterBool& p);
@@ -965,6 +959,7 @@ private:
     std::unique_ptr<ParameterConcept> _impl;
 };
 ```
+````
 
 ---
 
