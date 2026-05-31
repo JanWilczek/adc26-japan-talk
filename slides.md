@@ -21,6 +21,9 @@ fonts:
   sans: Montserrat, Open Sans
   mono: CaskaydiaCove Nerd Font
   local: CaskaydiaCove Nerd Font
+layout: image
+image: ./assets/TypeErasedParameter.png
+class: "!text-black !text-shadow-lg"
 ---
 
 # Type-Erased Audio Parameters
