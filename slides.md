@@ -1004,7 +1004,7 @@ private:
 
 # Operations supporting all JUCE parameter classes
 
-```cpp {1-3,7,12,18}
+```cpp {1-6,11,16,22}
 struct Visitor {
     virtual ~Visitor = default;
     virtual void accept(juce::AudioParameterFloat& p) = 0;
@@ -1034,6 +1034,8 @@ private:
     std::unique_ptr<ParameterConcept> _impl;
 };
 ```
+
+<!-- Ok, we know how to define operations on a single `TypeErasedParameter` objects. But we designed the class primarily to treat it as a collection. How to use `TypeErasedParameters` as a collection? -->
 
 ---
 
