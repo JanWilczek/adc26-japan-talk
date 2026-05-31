@@ -1182,31 +1182,19 @@ private:
 
 # Usage
 
-<style> .slidev-layout { zoom: 80%; }</style>
-
-```cpp
+```cpp {all|3-4|5-6,17|13,21}
 class ParameterHolderAudioProcessor : public juce::AudioProcessor {
 public:
   explicit ParameterHolderAudioProcessor(
       ParameterHolder::Builder builder = {})
       : floatParam{builder.add<juce::AudioParameterFloat>(
-            "floatParam",
-            "Float Param",
-            juce::NormalisableRange{1.f, 10.f},
-            5.f)},
-        boolParam{builder.add<juce::AudioParameterBool>("boolParam",
-                                                        "Bool Param",
-                                                        true)},
-        intParam{builder.add<juce::AudioParameterInt>("intParam",
-                                                      "Int Param",
-                                                      5,
-                                                      10,
-                                                      6)},
+            "floatParam", "Float Param", juce::NormalisableRange{1.f, 10.f}, 5.f)},
+        boolParam{builder.add<juce::AudioParameterBool>(
+            "boolParam", "Bool Param", true)},
+        intParam{builder.add<juce::AudioParameterInt>(
+            "intParam", "Int Param", 5, 10, 6)},
         choiceParam{builder.add<juce::AudioParameterChoice>(
-            "choiceParam",
-            "Choice Param",
-            juce::StringArray{"choice 0", "choice 1", "choice 2"},
-            1)},
+            "choiceParam", "Choice Param", juce::StringArray{"choice 0", "choice 1", "choice 2"}, 1)},
         parameterHolder{std::move(builder).build(*this)} {}
 
   //...
