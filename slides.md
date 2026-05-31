@@ -7,8 +7,6 @@ info: |
 
   Jan Wilczek's Audio Developer Conference Japan 2026 talk
 author: Jan Wilczek
-# apply UnoCSS classes to the current slide
-class: text-center
 # https://sli.dev/features/drawing
 drawings:
   persist: false
