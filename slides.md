@@ -1114,7 +1114,7 @@ public:
         _parameters.push_back(std::move(parameter));
         return ref;
     }
-  
+
     ParameterHolder<Visitor> build(juce::AudioProcessor& p) && {
         for (auto&& parameter : _parameters) {
             p.addParameter(parameter.release());
@@ -1125,7 +1125,6 @@ public:
 private:
     std::vector<std::unique_ptr<juce::AudioProcessorParameter>> _parameters;
     std::vector<TypeErasedParameter> _parametersForHolder;
-};
 };
 ```
 
