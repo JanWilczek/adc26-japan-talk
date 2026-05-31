@@ -716,16 +716,16 @@ void JsonSerializer::serialize(const Parameters& parameters,
 ## Cons
 
 - "Manual" serialization code
-    - Adding new parameters requires updating `JsonSerializer` -> error-prone
+    - Adding new parameters requires updating `JsonSerializer` $\implies$ error-prone
 
 ---
 
-# Summary
+# Summary so far
 
 1. We can treat plugin parameters as a collection of `juce::RangedAudioParameter`s (just like `juce::AudioProcessorValueTreeState`) -> We lose type information
 1. We can treat plugin parameters individually using only concrete `juce::AudioParameter*` classes -> We cannot define operations on a collection of parameters
 
-# Summary
+# Summary so far
 
 1. Collection: Extensibility
 1. Singular: Interpretability
