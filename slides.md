@@ -959,13 +959,15 @@ private:
     std::unique_ptr<ParameterConcept> _impl;
 };
 ```
+
+<!-- I don't like the approach using free functions; we would probably need to come up with long function names to avoid argument-dependent lookup. Furthermore, each serialization mechanism, requires adding a separate function or linking to a separate free function definition set. Can we do better? -->
 ````
 
 ---
 
 # Serialization
 
-```cpp {1-3,7,12,18}
+```cpp {1-6,11,16,22}
 struct Serializer {
     virtual ~Serializer = default;
     virtual void serializeToJson(juce::AudioParameterFloat& p) = 0;
