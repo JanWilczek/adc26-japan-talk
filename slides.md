@@ -1007,26 +1007,26 @@ private:
 ```cpp {1-6,11,16,22}
 struct Visitor {
     virtual ~Visitor = default;
-    virtual void accept(juce::AudioParameterFloat& p) = 0;
-    virtual void accept(juce::AudioParameterBool& p) = 0;
+    virtual void visit(juce::AudioParameterFloat& p) = 0;
+    virtual void visit(juce::AudioParameterBool& p) = 0;
     //...
 };
 
 class TypeErasedParameter {
 public:
     //...
-    void visit(Visitor& v) { _impl->visit(v); }
+    void accept(Visitor& v) { _impl->accept(v); }
 private:
     class ParameterConcept {
     public:
         virtual ~ParameterConcept() = default;
-        virtual void visit(Vistior&) = 0;
+        virtual void accept(Vistior&) = 0;
     };
     template <class Parameter>
     class ParameterModel : public ParameterConcept {
     public:
         //...
-        void visit(Visitor& v) override { v.accept(_p); }
+        void accept(Visitor& v) override { v.visit(_p); }
 
     private:
         Parameter& _p;
@@ -1049,7 +1049,9 @@ std::vector<TypeErasedParameter> parameters;
 
 # Collection of `TypeErasedParameter`s
 
-```cpp {all|35-39|all}
+<style> .slidev-layout { zoom: 60%; }</style>
+
+```cpp {all|2-29|42|42,32-33|42,35-39|all}
 class ParameterHolder {
   class TypeErasedParameter {
   public:
