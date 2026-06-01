@@ -2,6 +2,8 @@
 
 ## Audio Developer Conference Japan 2026 Talk by Jan Wilczek
 
+**The latest version of slides is in the [*slides-export.pdf* file](./slides-export.pdf).**
+
 To start the slide show:
 
 - `pnpm install`

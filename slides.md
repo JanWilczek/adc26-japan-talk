@@ -1431,8 +1431,9 @@ using JuceParameterHolder = ParameterHolder<JuceParameterVisitor>;
 
 1. Try out/tweak `wolfsound::ParameterHolder` from *[github.com/JanWilczek/wolfsound-dsp-utils](https://github.com/JanWilczek/wolfsound-dsp-utils)*
 
+1. Get slides at [*github.com/JanWilczek/adc26-japan-talk*](https://github.com/JanWilczek/adc26-japan-talk)
 
-5. Contact me via contact@thewolfsound.com
+1. Contact me via contact@thewolfsound.com
 
 </v-clicks>
 <!-- If you have any questions or are interested in holding a company training, contact me at -->
