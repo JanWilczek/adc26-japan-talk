@@ -91,8 +91,6 @@ layout: center
 
 # Who here uses JUCE to develop plugins?
 
-<!-- Well, let me tell you the story of developing my plugin -->
-
 ---
 
 # Key terms
@@ -118,6 +116,7 @@ layout: center
 ```plantuml
 @startuml
 hide empty members
+hide circle
 
 PluginProcessor *--> Parameters
 PluginEditor --> Parameters
@@ -170,13 +169,13 @@ PluginEditor --> Parameters
   * `true`/`false`
 * `AudioParameterInt`
   * integer in a closed range
-  * e.g., "1" from {0, 1, 2}
+  * e.g., "1" from \{0, 1, 2\}
 * `AudioParameterFloat`
   * real value from a closed range
-  * e.g., "0.25" from [0, 2]
+  * e.g., "0.25" from \[0, 2\]
 * `AudioParameterChoice`
   * a value from a fixed set of named options
-  * e.g., "lowpass" from {"lowpass", "highpass"}
+  * e.g., "lowpass" from \{"lowpass", "highpass"\}
 
 </v-clicks>
 
@@ -185,6 +184,8 @@ layout: center
 ---
 
 # The Story of a Synth
+
+<!-- Well, let me tell you the story of developing my plugin -->
 
 ---
 
@@ -511,6 +512,8 @@ void loadPreset(const std::string& presetName) {
 
 <style> .slidev-layout { zoom: 90%; }</style>
 
+<v-clicks>
+
 ## Pros
 
 - Easy to implement
@@ -527,6 +530,8 @@ void loadPreset(const std::string& presetName) {
     - presets
 - What if I want a different serialization format, like JSON?
 - Other APVTS drawbacks, e.g., requires a message thread
+
+</v-clicks>
 
 ---
 layout: center
@@ -767,7 +772,7 @@ struct SerializableParameters {
 
 
 ```cpp {9-10|1-7,11|17-20}
-SerializableParameters from(const :Parameters& p) {
+SerializableParameters from(const Parameters& p) {
   return {
       .rate = p.rate.get(),
       .bypassed = p.bypassed.get(),
@@ -796,6 +801,8 @@ void JsonSerializer::serialize(const Parameters& parameters,
 
 # Concrete-type based parameters
 
+<v-clicks>
+
 ## Pros
 
 - Full type safety
@@ -810,6 +817,8 @@ void JsonSerializer::serialize(const Parameters& parameters,
 
 - "Manual" serialization code
     - Adding new parameters requires updating `JsonSerializer` $\implies$ error-prone
+
+</v-clicks>
 
 ---
 
@@ -835,7 +844,7 @@ layout: center
 <h2>Answer: Type Erasure!</h2>
 </v-click>
 
-<!-- I want explain what type erasure is. Instead we'll discover this pattern while solving this problem. -->
+<!-- I don't want explain what type erasure is. Instead we'll discover this pattern while solving this problem. -->
 
 ---
 layout: center
