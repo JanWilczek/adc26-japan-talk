@@ -105,9 +105,13 @@ layout: center
 # Parameters in audio plugins
 
 ```plantuml
-PluginProcessor <>-> Parameters
-PluginEditor -> Parameters
-Host (DAW) -> Parameters
+@startuml
+hide empty members
+
+PluginProcessor *--> Parameters
+PluginEditor --> Parameters
+"Host (DAW)" --> Parameters
+@enduml
 ```
 
 <v-clicks>
