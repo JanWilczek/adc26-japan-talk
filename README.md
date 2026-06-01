@@ -1,4 +1,6 @@
-# Welcome to [Slidev](https://github.com/slidevjs/slidev)!
+# Type-Erased Audio Parameters
+
+## Audio Developer Conference Japan 2026 Talk by Jan Wilczek
 
 To start the slide show:
 
