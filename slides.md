@@ -122,7 +122,7 @@ layout: center
 
 ---
 
-TODO: EdenSynth UI
+![](./assets/EdenSynthUI.png)
 
 ---
 
