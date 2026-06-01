@@ -1137,7 +1137,7 @@ private:
 };
 ```
 
-<!-- Ok, we know how to define operations on a single `TypeErasedParameter` objects. But we designed the class primarily to treat it as a collection. How to use `TypeErasedParameters` as a collection? -->
+<!-- Ok, we know how to define operations on a single `TypeErasedParameter` object. But we designed the class primarily to treat it as a collection. How to use `TypeErasedParameters` as a collection? -->
 
 ---
 
@@ -1419,11 +1419,15 @@ using JuceParameterHolder = ParameterHolder<JuceParameterVisitor>;
 
 # References
 
+<v-clicks>
+
 1. JUCE C++ framework source code, *https://github.com/juce-framework/JUCE*
 1. Kevlin Henney, *Valued Conversions*, *C++ Report* July-August 2000
 1. Sean Parent, *Inheritance Is the Base Class of Evil*, GoingNative 2013
 1. Klaus Iglberger, *C++ Software Design: Design Principles and Patterns for High-Quality Software*, O'Reilly 2022
 1. Jan Wilczek & the JUCE team, *Official JUCE Audio Plugin Development Online Course*, [*https://wolfsoundacademy.com/juce*](https://wolfsoundacademy.com/juce) (available for free)
+
+</v-clicks>
 
 <!-- Klaus Iglberger has multiple CppCon talks regarding type erasure. -->
 
