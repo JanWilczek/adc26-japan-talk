@@ -2,6 +2,7 @@
 theme: default
 colorSchema: light
 title: Type-Erased Audio Parameters
+titleTemplate: '%s - Jan Wilczek ADC Japan 2026'
 info: |
   ## Type-Erased Audio Parameters
 
