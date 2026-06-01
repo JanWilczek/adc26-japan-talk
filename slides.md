@@ -38,6 +38,8 @@ ADC Japan 2026
 
 # Who am I?
 
+<v-clicks>
+
 - Jan Wilczek \[Yan Vil-check\]
 - Audio programming consultant & educator
 - Founder of TheWolfSound.com blog & YouTube channel on audio programming
@@ -49,7 +51,9 @@ ADC Japan 2026
     - DSP Pro on digital audio signal processing
     - Official JUCE C++ framework audio plugin development course (over 4,400 students enrolled)
 
-<!-- TODO: Map of Poland -->
+</v-clicks>
+
+<!-- Please, interrupt me. I will be showing a lot of code so you may get lost. Please, stop me and ask question, even if it's just because you fell asleep -->
 
 ---
 
