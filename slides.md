@@ -86,20 +86,43 @@ layout: center
 
 # Key terms
 
+<v-clicks>
+
 - **audio plugin**: a plugin for a digital audio workstation (DAW)
 - **plugin processor**: the core of an audio plugin; responsible for plugin metadata, audio processing, and state management
 - **plugin editor**: user interface (UI) of the plugin
 - **plugin parameter**: a user-controllable value influencing audio processing of a plugin
+    - `juce::AudioParameterFloat|Bool|Int|Choice` class instance in JUCE plugins
 - **UI state**: non-audio-related state
 - **serialization**: process of externalizing state (for example, to a JSON file)
 - **deserialization**: process of loading state from an external source (for example, a JSON file)
 - **preset** = plugin parameter values + metadata
+
+</v-clicks>
+
+---
+
+# Parameters in audio plugins
+
+TODO
+
+---
+
+# Parameter class hierarchy in JUCE
+
+<div class="mt-30">
+    <img src="./assets/AudioProcessorParameterClassHierarchy.svg"/>
+</div>
 
 ---
 layout: center
 ---
 
 # The Story of a Synth
+
+---
+
+TODO: EdenSynth UI
 
 ---
 
