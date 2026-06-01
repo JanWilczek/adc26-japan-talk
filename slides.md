@@ -126,6 +126,10 @@ layout: center
 
 ---
 
+<img src="./assets/EdenSynthParams.png" width="500"/>
+
+---
+
 <style> .slidev-layout { zoom: 60%; }</style>
 
 # Plugin processor
