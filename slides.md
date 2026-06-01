@@ -8,6 +8,12 @@ info: |
 
   Jan Wilczek's Audio Developer Conference Japan 2026 talk
 author: Jan Wilczek
+export:
+  format: pdf
+  timeout: 30000
+  dark: false
+  withClicks: false
+  withToc: false
 # https://sli.dev/features/drawing
 drawings:
   persist: false
