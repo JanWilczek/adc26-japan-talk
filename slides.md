@@ -104,7 +104,21 @@ layout: center
 
 # Parameters in audio plugins
 
-TODO
+```plantuml
+PluginProcessor <>-> Parameters
+PluginEditor -> Parameters
+Host (DAW) -> Parameters
+```
+
+<v-clicks>
+
+* Automation
+* Serialization
+* Presets (generic/custom)
+* Visualization (generic/custom)
+* UI (generic/custom)
+
+</v-clicks>
 
 ---
 
@@ -113,6 +127,26 @@ TODO
 <div class="mt-30">
     <img src="./assets/AudioProcessorParameterClassHierarchy.svg"/>
 </div>
+
+---
+
+# JUCE parameter classes
+
+<v-clicks>
+ 
+* `AudioParameterBool`
+  * `true`/`false`
+* `AudioParameterInt`
+  * integer in a closed range
+  * e.g., "1" from {0, 1, 2}
+* `AudioParameterFloat`
+  * real value from a closed range
+  * e.g., "0.25" from [0, 2]
+* `AudioParameterChoice`
+  * a value from a fixed set of named options
+  * e.g., "lowpass" from {"lowpass", "highpass"}
+
+</v-clicks>
 
 ---
 layout: center
