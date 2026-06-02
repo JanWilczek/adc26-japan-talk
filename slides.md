@@ -65,7 +65,7 @@ ADC Japan 2026
 
 </v-clicks>
 
-<!-- Please, interrupt me. I will be showing a lot of code so you may get lost. Please, stop me and ask question, even if it's just because you fell asleep -->
+<!-- Who here is a student of the JUCE course? Please, interrupt me. I will be showing a lot of code so you may get lost. Please, stop me and ask question, even if it's just because you fell asleep -->
 
 ---
 
@@ -148,9 +148,9 @@ PluginEditor --> Parameters
     <img src="./assets/Processor.svg" class="h-50 rounded shadow-lg" />
   </div>
   <div class="absolute bottom-10 left-0 right-0 h-60">
-    <img v-click src="./assets/UI.png" class="absolute left-[5%]  bottom-0 h-48 rounded shadow-xl" />
+    <img v-click src="./assets/UI.png" class="absolute left-[0%]  bottom-0 h-48 rounded shadow-xl" />
     <img v-click src="./assets/GenericEditor.png" class="absolute left-[10%] bottom-4 h-42 rounded shadow-xl" />
-    <img v-click src="./assets/ParameterUI.png" class="absolute left-[20%] bottom-0 h-56 rounded shadow-xl" />
+    <img v-click src="./assets/ParameterUI.png" class="absolute left-[20%] bottom-0 h-56 rounded" />
     <img v-click src="./assets/Modulation.png" class="absolute left-[15%] bottom-4 h-42 rounded shadow-xl"/>
     <img v-click src="./assets/ReaperPresets.png" class="absolute left-[40%] bottom-0 h-48 rounded shadow-xl" />
   </div>
