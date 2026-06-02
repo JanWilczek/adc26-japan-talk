@@ -30,16 +30,21 @@ fonts:
   local: CaskaydiaCove Nerd Font
 layout: image
 image: ./assets/TypeErasedParameter.png
-class: "!text-black !text-shadow-lg"
 ---
 
-# Type-Erased Audio Parameters
+<h1 class="text-black [text-shadow:_-1px_-1px_0_white,_1px_-1px_0_white,_-1px_1px_0_white,_1px_1px_0_white]">
+Type-Erased Audio Parameters
+</h1>
 
-## A New Approach to an Old Problem
+<h2 class="text-black [text-shadow:_-1px_-1px_0_white,_1px_-1px_0_white,_-1px_1px_0_white,_1px_1px_0_white]">
+A New Approach to an Old Problem
+</h2>
 
+<p class="text-black">
 Jan Wilczek (WolfSound)
 
 ADC Japan 2026
+</p>
 
 ---
 
