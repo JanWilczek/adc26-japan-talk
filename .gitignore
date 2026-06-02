@@ -5,3 +5,9 @@ dist
 .vite-inspect
 .remote-assets
 components.d.ts
+
+outline.md
+notes.md
+todo.md
+done.md
+
