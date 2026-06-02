@@ -40,11 +40,11 @@ Type-Erased Audio Parameters
 A New Approach to an Old Problem
 </h2>
 
-<p class="text-black">
+<div class="text-black mt-4">
 Jan Wilczek (WolfSound)
 
 ADC Japan 2026
-</p>
+</div>
 
 ---
 
